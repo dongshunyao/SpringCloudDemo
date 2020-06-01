@@ -1,17 +1,21 @@
 package com.example.consumer_demo.controller;
 
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import com.example.consumer_demo.service.ConsumerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class ConsumerController {
-    @LoadBalanced
-    private RestTemplate restTemplate = new RestTemplate();
+    private ConsumerService consumerService;
+
+    @Autowired
+    public ConsumerController(ConsumerService consumerService) {
+        this.consumerService = consumerService;
+    }
 
     @RequestMapping("/api/v1/demo/get")
     public String consumer() {
-        return "Consumer get message: " + restTemplate.getForObject("http://producer_demo/producer/produce", String.class);
+        return "Consumer get message: " + consumerService.consumer();
     }
 }
